@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'users',
     'lms',
     'django_filters',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -159,3 +160,16 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header',
+            'description': 'Введите токен в формате: Bearer <Ваш JWT-токен>',
+        },
+    },
+}
+
+STRIPE_API_KEY = os.getenv('STRIPE_API_KEY')
