@@ -1,0 +1,26 @@
+[
+    {
+        "model": "lms.course",
+        "pk": 1,
+        "fields": {
+            "name": "Python для начинающих",
+            "preview": "",
+            "description": "Основы программирования на Python",
+            "uploaded_at": "2025-05-20T10:51:22.400Z",
+            "updated_at": "2025-05-20T20:51:22.400Z",
+            "owner": 2
+        }
+    },
+    {
+        "model": "lms.course",
+        "pk": 2,
+        "fields": {
+            "name": "Веб-разработка с Django",
+            "preview": "",
+            "description": "Создание веб-приложений с использованием Django",
+            "uploaded_at": "2025-05-20T10:51:22.400Z",
+            "updated_at": "2025-05-20T20:51:22.400Z",
+            "owner": 3
+        }
+    }
+]
