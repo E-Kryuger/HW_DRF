@@ -21,17 +21,64 @@
 ```bash
 https://github.com/E-Kryuger/HW_DRF.git
 ```
-2. Установите зависимости:
-```bash
-pip install -r requirements.txt
-```
-
-## Подключение БД
-1. Создайте БД
 2. Создайте файл `.env` из файла `.env.sample`
-
-## Применение миграций
+3. Соберите и запустите контейнеры (Команда собирает и запускает контейнеры, применяет миграции и запускает проект):
 ```bash
-python manage.py migrate
+docker-compose up -d --build
 ```
 
+## Повторный запуск проекта
+```bash
+docker-compose up -d
+```
+
+## Проверка работоспособности каждого сервиса
+
+### Приложение LMS REST-API (Django)Add commentMore actions
+
+После запуска проекта, приложение будет доступно по адресу http://localhost:8000. 
+Чтобы проверить, что сервис работает правильно, откройте этот URL в браузере.
+
+### База данных (PostgreSQL)
+
+Чтобы проверить, что PostgreSQL работает, выполните:
+```bash
+docker-compose exec db pg_isready -U "$(echo $POSTGRES_USER)"
+```
+
+More actions
+### Redis
+
+Чтобы проверить работу Redis, выполните команду:
+```bash
+docker-compose exec redis redis-cli ping
+```
+
+### Celery
+
+Для проверки работы Celery, выполните:
+
+```bash
+docker-compose exec celery celery -A config status
+```
+
+### Celery Beat
+
+Для проверки работы Celery Beat, выполните:
+```bash
+docker-compose logs celery_beat
+```
+
+## Отчета о покрытии кода тестамиAdd commentMore actions
+
+### Шаг 1: Сбор данных о покрытии
+Запуск тестов с измерением покрытия кода:
+```bash
+docker-compose exec app coverage run --source='.' manage.py testAdd commentMore actions
+```
+
+### Шаг 2: Генерация текстового отчётаAdd commentMore actions
+Создание текстового отчёта:
+```bash
+docker-compose exec app coverage reportAdd commentMore actions
+```
