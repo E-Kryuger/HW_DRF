@@ -48,45 +48,55 @@ class User(AbstractUser):
 
 
 class Payment(models.Model):
-    PAYMENT_CASH = 'cash'
-    PAYMENT_TRANSFER = 'transfer'
+    PAYMENT_CASH = "cash"
+    PAYMENT_TRANSFER = "transfer"
 
     PAYMENT_CHOICES = [
-        (PAYMENT_CASH, 'Наличные'),
-        (PAYMENT_TRANSFER, 'Перевод на счет'),
+        (PAYMENT_CASH, "Наличные"),
+        (PAYMENT_TRANSFER, "Перевод на счет"),
     ]
 
-    STATUS_UNPAID = 'unpaid'
-    STATUS_PAID = 'paid'
+    STATUS_UNPAID = "unpaid"
+    STATUS_PAID = "paid"
 
     STATUS_CHOICES = [
-        (STATUS_UNPAID, 'не оплачено'),
-        (STATUS_PAID, 'оплачено'),
+        (STATUS_UNPAID, "не оплачено"),
+        (STATUS_PAID, "оплачено"),
     ]
 
     paid_course = models.ForeignKey(
-        Course, on_delete=models.CASCADE, related_name='payments', blank=True, null=True, verbose_name='оплаченный курс'
+        Course,
+        on_delete=models.CASCADE,
+        related_name="payments",
+        blank=True,
+        null=True,
+        verbose_name="оплаченный курс",
     )
     paid_lesson = models.ForeignKey(
-        Lesson, on_delete=models.CASCADE, related_name='payments', blank=True, null=True, verbose_name='оплаченный урок'
+        Lesson,
+        on_delete=models.CASCADE,
+        related_name="payments",
+        blank=True,
+        null=True,
+        verbose_name="оплаченный урок",
     )
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='payments', verbose_name='пользователь')
-    payment_date = models.DateField(auto_now_add=True, verbose_name='дата оплаты')
-    amount = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='сумма')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="payments", verbose_name="пользователь")
+    payment_date = models.DateField(auto_now_add=True, verbose_name="дата оплаты")
+    amount = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="сумма")
     payment_method = models.CharField(
-        max_length=9, choices=PAYMENT_CHOICES, default=PAYMENT_TRANSFER, verbose_name='способ оплаты'
+        max_length=9, choices=PAYMENT_CHOICES, default=PAYMENT_TRANSFER, verbose_name="способ оплаты"
     )
 
-    session_id = models.CharField(max_length=255, blank=True, null=True, verbose_name='ID сессии')
-    link = models.URLField(max_length=400, blank=True, null=True, verbose_name='ссылка на оплату')
+    session_id = models.CharField(max_length=255, blank=True, null=True, verbose_name="ID сессии")
+    link = models.URLField(max_length=400, blank=True, null=True, verbose_name="ссылка на оплату")
     status = models.CharField(
-        max_length=6, choices=STATUS_CHOICES, default=STATUS_UNPAID, verbose_name='статус платежа'
+        max_length=6, choices=STATUS_CHOICES, default=STATUS_UNPAID, verbose_name="статус платежа"
     )
 
     def __str__(self):
-        return f'Платеж {self.user} за {self.paid_course if self.paid_course else self.paid_lesson}'
+        return f"Платеж {self.user} за {self.paid_course if self.paid_course else self.paid_lesson}"
 
     class Meta:
-        verbose_name = 'платеж'
-        verbose_name_plural = 'платежи'
+        verbose_name = "платеж"
+        verbose_name_plural = "платежи"

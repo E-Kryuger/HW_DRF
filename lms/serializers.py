@@ -8,10 +8,8 @@ class LessonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lesson
         fields = "__all__"
-        read_only_fields = ('owner',)
-        validators = [
-            validators.AllowedResourceValidator()
-        ]
+        read_only_fields = ("owner",)
+        validators = [validators.AllowedResourceValidator()]
 
 
 class CourseSerializer(serializers.ModelSerializer):
@@ -23,21 +21,19 @@ class CourseSerializer(serializers.ModelSerializer):
         return instance.lessons.count()
 
     def get_is_subscribed(self, instance) -> bool:
-        return instance.subscriptions.filter(user=self.context['request'].user).exists()
+        return instance.subscriptions.filter(user=self.context["request"].user).exists()
 
     class Meta:
         model = Course
-        fields = ('id', 'name', 'preview', 'description', 'owner', 'is_subscribed', 'lesson_count', 'lessons')
-        read_only_fields = ('owner',)
+        fields = ("id", "name", "preview", "description", "owner", "is_subscribed", "lesson_count", "lessons")
+        read_only_fields = ("owner",)
 
 
 class SubscriptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subscription
-        fields = '__all__'
+        fields = "__all__"
         validators = [
-            serializers.UniqueTogetherValidator(
-                fields=['user', 'course'], queryset=Subscription.objects.all()
-            )
+            serializers.UniqueTogetherValidator(fields=["user", "course"], queryset=Subscription.objects.all())
         ]
-        read_only_fields = ('user',)
+        read_only_fields = ("user",)

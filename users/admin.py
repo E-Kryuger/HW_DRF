@@ -9,7 +9,14 @@ class UserAdmin(admin.ModelAdmin):
     exclude = ("password",)
     search_fields = ("city",)
 
+
 @admin.register(Payment)
 class PaymentAdmin(admin.ModelAdmin):
-     list_display = ('id', 'user', 'amount', 'payment_method', 'payment_date',)
-     exclude = ('payment_date',)
+    list_display = (
+        "id",
+        "user",
+        "amount",
+        "payment_method",
+        "payment_date",
+    )
+    exclude = ("payment_date",)
