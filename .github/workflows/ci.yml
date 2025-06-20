@@ -99,8 +99,8 @@ jobs:
       - name: Deploy to server
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-          docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/drf_hw_app:${{ github.sha }}
-          docker stop drf_hw_app || true
-          docker rm drf_hw_app || true
-          docker run -d --name drf_hw_app -p 80:8000 ${{ secrets.DOCKER_HUB_USERNAME }}/drf_hw_app:${{ github.sha }}
+          sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/drf_hw_app:${{ github.sha }}
+          sudo docker stop drf_hw_app || true
+          sudo docker rm drf_hw_app || true
+          sudo docker run -d --name drf_hw_app -p 80:8000 ${{ secrets.DOCKER_HUB_USERNAME }}/drf_hw_app:${{ github.sha }}
           EOF
