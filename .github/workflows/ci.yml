@@ -81,10 +81,10 @@ jobs:
         run: echo ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
 
       - name: Build Docker image
-        run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/drf_hw_app:${{ github.sha }} .
+        run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/hw_drf_app:${{ github.sha }} .
 
       - name: Push Docker image in Docker hub
-        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/drf_hw_app:${{ github.sha }}
+        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/hw_drf_app:${{ github.sha }}
 
   deploy:
     needs: build
@@ -99,11 +99,11 @@ jobs:
       - name: Deploy to server
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-          sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/drf_hw_app:${{ github.sha }}
+          sudo docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/hw_drf_app:${{ github.sha }}
           sudo docker stop $(sudo docker ps -q) || true
           sudo docker rm $(sudo docker ps -a -q) || true
           sudo docker rmi $(sudo docker images -q) || true
-          sudo docker run -d --name drf_hw_app -p 80:8000 --env-file /var/www/drf_hw/.env ${{ secrets.DOCKER_HUB_USERNAME }}/drf_hw_app:${{ github.sha }}
-          sudo docker exec drf_hw_app python manage.py migrate
-          sudo docker exec drf_hw_app python manage.py collectstatic --noinput
+          sudo docker run -d --name hw_drf_app -p 80:8000 --env-file /var/www/hw_drf/.env ${{ secrets.DOCKER_HUB_USERNAME }}/hw_drf_app:${{ github.sha }}
+          sudo docker exec hw_drf_app python manage.py migrate
+          sudo docker exec hw_drf_app python manage.py collectstatic --noinput
           EOF
