@@ -103,6 +103,4 @@ jobs:
           sudo docker stop drf_hw_app || true
           sudo docker rm drf_hw_app || true
           sudo docker run -d --name drf_hw_app -p 80:8000 ${{ secrets.DOCKER_HUB_USERNAME }}/drf_hw_app:${{ github.sha }}
-          sudo docker exec drf_hw_app python manage.py migrate
-          sudo docker exec drf_hw_app python manage.py collectstatic --noinput
           EOF
