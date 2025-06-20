@@ -31,7 +31,7 @@ class UserRetrieveAPIView(generics.RetrieveAPIView):
     queryset = User.objects.all()
 
     def get_serializer_class(self):
-        if getattr(self, 'swagger_fake_view', False):
+        if getattr(self, "swagger_fake_view", False):
             return GuestUserSerializer
 
         if self.request.user == self.get_object():
@@ -72,12 +72,15 @@ class PaymentCreateAPIView(generics.CreateAPIView):
 class PaymentListAPIView(generics.ListAPIView):
     permission_classes = [IsAuthenticated, ~IsModeratorUser]
     serializer_class = PaymentSerializer
-    filter_backends = [OrderingFilter, DjangoFilterBackend, ]
-    ordering_fields = ('payment_date',)
-    filterset_fields = ('paid_course', 'paid_lesson')
+    filter_backends = [
+        OrderingFilter,
+        DjangoFilterBackend,
+    ]
+    ordering_fields = ("payment_date",)
+    filterset_fields = ("paid_course", "paid_lesson")
 
     def get_queryset(self):
-        if getattr(self, 'swagger_fake_view', False):
+        if getattr(self, "swagger_fake_view", False):
             return Payment.objects.none()
         return Payment.objects.filter(user=self.request.user)
 
@@ -92,15 +95,15 @@ class PaymentStatusAPIView(APIView):
                 schema=openapi.Schema(
                     type=openapi.TYPE_OBJECT,
                     properties={
-                        'session_id': openapi.Schema(type=openapi.TYPE_STRING, title='ID сессии'),
-                        'payment_status': openapi.Schema(
+                        "session_id": openapi.Schema(type=openapi.TYPE_STRING, title="ID сессии"),
+                        "payment_status": openapi.Schema(
                             type=openapi.TYPE_STRING,
-                            title='Статус платежа',
-                            enum=['unpaid', 'paid'],
+                            title="Статус платежа",
+                            enum=["unpaid", "paid"],
                             read_only=True,
                         ),
-                    }
-                )
+                    },
+                ),
             ),
         }
     )
@@ -108,7 +111,7 @@ class PaymentStatusAPIView(APIView):
         try:
             payment = Payment.objects.get(session_id=session_id)
         except Payment.DoesNotExist:
-            raise NotFound('Платеж с указанным session_id не найден')
+            raise NotFound("Платеж с указанным session_id не найден")
 
         # Запуск проверки разрешений для конкретного объекта
         obj = payment.paid_course or payment.paid_lesson
@@ -119,7 +122,9 @@ class PaymentStatusAPIView(APIView):
             payment.status = payment_status
             payment.save()
 
-        return Response({
-            'session_id': session_id,
-            'payment_status': payment_status,
-        })
+        return Response(
+            {
+                "session_id": session_id,
+                "payment_status": payment_status,
+            }
+        )

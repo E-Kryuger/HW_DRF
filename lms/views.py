@@ -29,25 +29,25 @@ class CourseViewSet(viewsets.ModelViewSet):
             send_update_notifications.delay(updated_course_id=course.pk)
 
         else:
-            reason = 'Прошло меньше 4 часов с последнего обновления' if is_subscribed else 'Нет подписчиков на курс'
-            print(f'Уведомления не были разосланы! Причина: {reason}')
+            reason = "Прошло меньше 4 часов с последнего обновления" if is_subscribed else "Нет подписчиков на курс"
+            print(f"Уведомления не были разосланы! Причина: {reason}")
 
     def get_permissions(self):
-        if self.action == 'create':
+        if self.action == "create":
             self.permission_classes = [IsAuthenticated, ~IsModeratorUser]
-        elif self.action == 'list':
+        elif self.action == "list":
             self.permission_classes = [IsAuthenticated]
-        elif self.action == 'retrieve':
+        elif self.action == "retrieve":
             self.permission_classes = [IsAuthenticated, IsOwnerUser | IsStudentUser | IsModeratorUser]
-        elif self.action in {'update', 'partial_update'}:
+        elif self.action in {"update", "partial_update"}:
             self.permission_classes = [IsAuthenticated, IsOwnerUser | IsModeratorUser]
-        elif self.action == 'destroy':
+        elif self.action == "destroy":
             self.permission_classes = [IsAuthenticated, IsOwnerUser]
 
         return [permission() for permission in self.permission_classes]
 
     def get_queryset(self):
-        if getattr(self, 'swagger_fake_view', False):
+        if getattr(self, "swagger_fake_view", False):
             return Course.objects.none()
         return services.get_product_queryset(
             user=self.request.user,
@@ -103,26 +103,23 @@ class SubscriptionAPIView(APIView):
         request_body=SubscriptionSerializer,
         responses={
             200: openapi.Schema(
-                type=openapi.TYPE_OBJECT,
-                properties={
-                    'message': openapi.Schema(type=openapi.TYPE_STRING)
-                }
+                type=openapi.TYPE_OBJECT, properties={"message": openapi.Schema(type=openapi.TYPE_STRING)}
             )
-        }
+        },
     )
     def post(self, *args, **kwargs):
         user = self.request.user
-        course_id = self.request.data.get('course')
+        course_id = self.request.data.get("course")
         course_item = generics.get_object_or_404(Course.objects.all(), pk=course_id)
         subs_item = course_item.subscriptions.filter(user=user)
 
         # Если подписка у пользователя на этот курс есть - удаляем ее
         if subs_item.exists():
             subs_item.delete()
-            message = 'подписка удалена'
+            message = "подписка удалена"
         # Если подписки у пользователя на этот курс нет - создаем ее
         else:
             Subscription.objects.create(user=user, course=course_item)
-            message = 'подписка добавлена'
+            message = "подписка добавлена"
         # Возвращаем ответ в API
         return Response({"message": message})

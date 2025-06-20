@@ -5,9 +5,10 @@ from users.models import Payment
 
 
 class IsModeratorUser(permissions.BasePermission):
-    """ Проверка на модератора """
+    """Проверка на модератора"""
+
     def has_permission(self, request, view):
-        return request.user.groups.filter(name='moderators').exists()
+        return request.user.groups.filter(name="moderators").exists()
 
     # def has_object_permission(self, request, view, obj):
     #     if request.method == 'DELETE':
@@ -19,13 +20,15 @@ class IsModeratorUser(permissions.BasePermission):
 
 
 class IsOwnerUser(permissions.BasePermission):
-    """ Проверка на авторство """
+    """Проверка на авторство"""
+
     def has_object_permission(self, request, view, obj):
         return obj.owner == request.user
 
 
 class IsStudentUser(permissions.BasePermission):
-    """ Проверка на право просмотра материала: доступно пользователю, купившему курс/урок """
+    """Проверка на право просмотра материала: доступно пользователю, купившему курс/урок"""
+
     def has_object_permission(self, request, view, obj):
         if isinstance(obj, Course):
             return Payment.objects.filter(user=request.user, paid_course=obj).exists()
@@ -35,6 +38,7 @@ class IsStudentUser(permissions.BasePermission):
 
 
 class IsProfileOwner(permissions.BasePermission):
-    """ Проверка на владельца профиля """
+    """Проверка на владельца профиля"""
+
     def has_object_permission(self, request, view, obj):
         return request.user == obj

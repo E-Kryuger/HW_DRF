@@ -10,15 +10,12 @@ LAST_LOGIN_LIMIT = timedelta(days=30)
 
 @shared_task
 def disable_inactive_users():
-    """ Блокировка пользователей ресурса, которые не входили в систему более месяца """
+    """Блокировка пользователей ресурса, которые не входили в систему более месяца"""
 
     # print('Вызов disable_inactive_users()')
     inactive_users = User.objects.filter(
-        is_active=True,
-        is_superuser=False,
-        is_staff=False,
-        last_login__lt=timezone.now() - LAST_LOGIN_LIMIT
-    ).exclude(groups__name='moderators')
+        is_active=True, is_superuser=False, is_staff=False, last_login__lt=timezone.now() - LAST_LOGIN_LIMIT
+    ).exclude(groups__name="moderators")
 
     if inactive_users.exists():
         email_list = [user.email for user in inactive_users]

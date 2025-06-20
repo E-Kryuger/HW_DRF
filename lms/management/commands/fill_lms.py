@@ -5,15 +5,15 @@ from lms.models import Lesson, Course
 from users.models import User
 
 FIXTURE_PATHS = (
-    'users/fixtures/groups_fixture.json',
-    'users/fixtures/users_fixture.json',
-    'lms/fixtures/courses_fixture.json',
-    'lms/fixtures/lessons_fixture.json',
-    'users/fixtures/payment_fixture.json',
-    'lms/fixtures/subscriptions_fixture.json',
+    "users/fixtures/groups_fixture.json",
+    "users/fixtures/users_fixture.json",
+    "lms/fixtures/courses_fixture.json",
+    "lms/fixtures/lessons_fixture.json",
+    "users/fixtures/payment_fixture.json",
+    "lms/fixtures/subscriptions_fixture.json",
 )
 
-AUTH_DETAILS = ("""
+AUTH_DETAILS = """
 Данные администратора:
     - email: admin@admin.com
     - password: 123
@@ -33,11 +33,11 @@ AUTH_DETAILS = ("""
         - inactive_user030624@example.com
         - inactive_user090924@example.com
   Пароль для пользователей: password123
-""")
+"""
 
 
 class Command(BaseCommand):
-    help = 'Наполнение проекта тестовыми данными с выводом данных для авторизации'
+    help = "Наполнение проекта тестовыми данными с выводом данных для авторизации"
 
     def handle(self, *args, **options):
         # Очистка перед загрузкой данных
@@ -48,8 +48,8 @@ class Command(BaseCommand):
 
         # Загрузка данных
         for fixture_path in FIXTURE_PATHS:
-            call_command('loaddata', fixture_path)
-        self.stdout.write(self.style.SUCCESS('Данные загружены успешно!'))
+            call_command("loaddata", fixture_path)
+        self.stdout.write(self.style.SUCCESS("Данные загружены успешно!"))
 
         # Вывод данных для авторизации
         self.stdout.write(AUTH_DETAILS)
